@@ -58,10 +58,9 @@ def _recursive_lazyop(buf:LazyBuffer, inputs:List[LazyBuffer], outputs:Tuple[Laz
     var_vals.update(st_var_vals)
     if isinstance(buf.arg, Variable):
       var_vals.__setitem__(*buf.arg.unbind())
-      #value = buf.arg.val?
-      val = buf.arg
+      val = buf.arg.unbind()[0]
     else: val = buf.arg
-    assert isinstance(val, ConstType), f"cannot create ConstBuffer of type {type(val)}"
+    assert isinstance(val, ConstType|Variable), f"cannot create ConstBuffer of type {type(val)}"
     return LazyOp(BufferOps.CONST, (), ConstBuffer(val, buf.dtype, unbound_st))
 
   # if we aren't fusing it, it's a load and we add it to the inputs
